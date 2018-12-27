@@ -11,30 +11,31 @@
 ////fo/*b*/
 
 // @Filename: /c.js
-////const x = 0;/*c*/ // Off for JS files (unless a non-declaration external module exists in the project)
+////const x = 0;/*c*/
+
+// @Filename: /c1.js
+////// @ts-check
+////const x = 0;/*ccheck*/
 
 // @Filename: /c2.ts
-////const x = 0;/*c2*/
+////const x = 0;/*cts*/
 
 // @Filename: /d.js
 ////const a = import("./a"); // Does not make this an external module
 ////fo/*d*/
 
+// @Filename: /d1.js
+////// @ts-check
+////const a = import("./a"); // Does not make this an external module
+////fo/*dcheck*/
+
 // @Filename: /d2.ts
 ////const a = import("./a"); // Does not make this an external module
-////fo/*d2*/
+////fo/*dts*/
 
-for (const marker of ["b", "c", "d"]) {
-    goTo.marker(marker);
-    verify.not.completionListContains({ name: "foo", source: "/node_modules/a/index" }, undefined, undefined, undefined, undefined, undefined, {
-        includeCompletionsForModuleExports: true
-    });
-}
-
-for (const marker of ["c2", "d2"]) {
-    goTo.marker(marker);
-    verify.completionListContains({ name: "foo", source: "/node_modules/a/index" }, "const foo: 0", "", "const", /*spanIndex*/ undefined, /*hasAction*/ true, {
-        includeCompletionsForModuleExports: true,
-        sourceDisplay: "a",
-    });
-}
+verify.completions({ marker: ["b"], excludes: "foo", preferences: { includeCompletionsForModuleExports: true } });
+verify.completions({
+    marker: ["c", "ccheck", "cts", "d", "dcheck", "dts"],
+    includes: [{ name: "foo", source: "/node_modules/a/index", text: "const foo: 0", kind: "const", kindModifiers: "export,declare", hasAction: true, sourceDisplay: "a" }],
+    preferences: { includeCompletionsForModuleExports: true },
+});

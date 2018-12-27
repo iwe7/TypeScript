@@ -36,7 +36,7 @@ function main(): void {
                     console.error("Unexpected XML file structure. Expected to find result.LCX.$.TgtCul.");
                     process.exit(1);
                 }
-                const outputDirectoryName = getPreferedLocaleName(result.LCX.$.TgtCul);
+                const outputDirectoryName = getPreferedLocaleName(result.LCX.$.TgtCul).toLowerCase();
                 if (!outputDirectoryName) {
                     console.error(`Invalid output locale name for '${result.LCX.$.TgtCul}'.`);
                     process.exit(1);
@@ -65,11 +65,10 @@ function main(): void {
      * There are three exceptions, zh-CN, zh-TW and pt-BR.
      */
     function getPreferedLocaleName(localeName: string) {
-        localeName = localeName.toLowerCase();
         switch (localeName) {
-            case "zh-cn":
-            case "zh-tw":
-            case "pt-br":
+            case "zh-CN":
+            case "zh-TW":
+            case "pt-BR":
                 return localeName;
             default:
                 return localeName.split("-")[0];
